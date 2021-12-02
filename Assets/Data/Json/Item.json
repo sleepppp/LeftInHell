@@ -1,0 +1,52 @@
+{
+  "List": [
+    {
+      "ID": "1",
+      "DEV": "붕대",
+      "DescID": "1",
+      "Type": "1",
+      "MaxStackAmount": "10",
+      "Width": "1",
+      "Height": "1",
+      "ModelID": "0",
+      "ImageID": "2",
+      "Weight": "1"
+    },
+    {
+      "ID": "2",
+      "DEV": "테스트아이템박스",
+      "DescID": "4",
+      "Type": "2",
+      "MaxStackAmount": "1",
+      "Width": "5",
+      "Height": "3",
+      "ModelID": "0",
+      "ImageID": "2",
+      "Weight": "1"
+    },
+    {
+      "ID": "3",
+      "DEV": "테스트가방",
+      "DescID": "5",
+      "Type": "3",
+      "MaxStackAmount": "1",
+      "Width": "5",
+      "Height": "10",
+      "ModelID": "0",
+      "ImageID": "3",
+      "Weight": "1"
+    },
+    {
+      "ID": "4",
+      "DEV": "천",
+      "DescID": "2",
+      "Type": "1",
+      "MaxStackAmount": "5",
+      "Width": "2",
+      "Height": "1",
+      "ModelID": "0",
+      "ImageID": "3",
+      "Weight": "1"
+    }
+  ]
+}

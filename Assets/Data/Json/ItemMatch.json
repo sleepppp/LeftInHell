@@ -1,0 +1,16 @@
+{
+  "List": [
+    {
+      "ID": "1",
+      "ItemID": "3",
+      "MatchType": "3",
+      "Value": "10"
+    },
+    {
+      "ID": "2",
+      "ItemID": "3",
+      "MatchType": "4",
+      "Value": "30"
+    }
+  ]
+}

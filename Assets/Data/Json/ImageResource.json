@@ -1,0 +1,19 @@
+{
+  "List": [
+    {
+      "ID": "1",
+      "Path": "test",
+      "DEV": "테스트"
+    },
+    {
+      "ID": "2",
+      "Path": "Assets/Resource/Sprite/Item/Bandage.png",
+      "DEV": "밴드"
+    },
+    {
+      "ID": "3",
+      "Path": "Assets/Resource/Sprite/Item/Cloth.png",
+      "DEV": "천"
+    }
+  ]
+}

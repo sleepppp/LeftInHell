@@ -1,0 +1,41 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: ec55398247cfe4749badf083f81f74c6
+  m_SerializeEntries:
+  - m_GUID: cabd3c4a94df4ce4ebab1f022c17cf33
+    m_Address: Assets/Data/Etc
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: dd31edab0ceca82428e82edb4bd328ab
+    m_Address: Assets/Data/Json
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: cc088e464bfcb8c488791e74d5d5f9b8
+    m_Address: Assets/Resource/Prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f46f628eed225084f86d9f5a79ccc284
+    m_Address: Assets/Resource/Sprite
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 10d48e26f8ee8d944ba57760ac0bc5b2, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: a6fe0406f83e69d4789fea8e6361d288, type: 2}
+    - {fileID: 11400000, guid: 6ebb22cb1f5d6194d96bd01a013e81bc, type: 2}

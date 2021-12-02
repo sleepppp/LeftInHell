@@ -1,0 +1,25 @@
+{
+  "List": [
+    {
+      "ID": "1",
+      "DEV": "힐킷",
+      "DescID": "2",
+      "IsConsumeable": "true",
+      "IsStackable": "true"
+    },
+    {
+      "ID": "2",
+      "DEV": "아이템박스",
+      "DescID": "3",
+      "IsConsumeable": "false",
+      "IsStackable": "false"
+    },
+    {
+      "ID": "3",
+      "DEV": "가방",
+      "DescID": "6",
+      "IsConsumeable": "false",
+      "IsStackable": "false"
+    }
+  ]
+}
