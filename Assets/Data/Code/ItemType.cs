@@ -16,6 +16,7 @@ namespace Project.GameData
 		public int DescID;
 		public bool IsConsumeable;
 		public bool IsStackable;
+		public int ColorID;
 	}
 	public class ItemTypeRecordList 
 	{

@@ -119,6 +119,7 @@ namespace Project
         public List<ItemBlock> BlockList { get; private set; }
         public int Width { get; private set; }
         public int Height { get; private set; }
+        public List<ItemType> CanAddedTypeList { get; private set; } = new List<ItemType>();
 
         public ItemContainer() 
         {
@@ -140,6 +141,13 @@ namespace Project
             }
         }
 
+        public void AddPossibleStorageItemType(ItemType itemType)
+        {
+            if (CanAddedTypeList.Contains(itemType))
+                return;
+
+            CanAddedTypeList.Add(itemType);
+        }
         public ItemSlot GetItemSlot(int indexX, int indexY)
         {
             if (IsOutOfRange(indexX, indexY)) return null;
@@ -359,6 +367,22 @@ namespace Project
             BlockList.Add(block);
         }
 
+        public void UnRegisterBlock(ItemBlock itemBlock)
+        {
+            if (BlockList.Contains(itemBlock) == false)
+                return;
+
+            Foreach(itemBlock.LeftTopSlot.IndexX, itemBlock.LeftTopSlot.IndexY, itemBlock.Width, itemBlock.Height, (slot) =>
+            {
+                if (slot.Block == itemBlock)
+                {
+                    slot.UnRegisterBlock();
+                }
+            });
+            itemBlock.SetLeftTopSlot(null);
+            BlockList.Remove(itemBlock);
+        }
+
         public bool IsEmptyArea(int startX, int startY,int width, int height)
         {
             bool result = true;
@@ -373,6 +397,21 @@ namespace Project
                 return false;
             });
             return result;
+        }
+
+        public bool IsEmptyAreaAndInBound(int startX, int startY, int width, int height)
+        {
+            for(int y= startY; y < startY + height; ++y)
+            {
+                for(int x=startX; x < startX + width;++x)
+                {
+                    ItemSlot slot = GetItemSlot(x, y);
+                    if (slot == null || slot.IsEmpty() == false)
+                        return false;
+                }
+            }
+
+            return true;
         }
 
         public ItemSlot FindEmptyAreaAndGetStartSlot(int width, int height)
@@ -395,6 +434,11 @@ namespace Project
             if (indexX < 0 || indexX >= Width) return true;
             if (indexY < 0 || indexY >= Height) return true;
             return false;
+        }
+
+        public void ForeachAllSlot(Action<ItemSlot> query)
+        {
+            Foreach(0, 0, Width, Height, query);
         }
 
         void Foreach(int startX, int startY, int width, int height,Action<ItemSlot> query)

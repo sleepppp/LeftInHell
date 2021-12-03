@@ -12,9 +12,20 @@ namespace Project
             get
             {
                 if (instance == null)
-                    instance = new T();
+                    CreateInstance();
                 return instance;
             }
+        }
+
+        public static void ReleaseInstance()
+        {
+            instance = null;
+        }
+
+        public static void CreateInstance()
+        {
+            if (instance == null)
+                instance = new T();
         }
     }
 }

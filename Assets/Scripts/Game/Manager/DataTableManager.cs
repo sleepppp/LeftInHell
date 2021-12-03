@@ -12,6 +12,8 @@ namespace Project.GameData
         public static ItemMatchRecordTable ItemMatchTable { get; private set; }
         public static TextRecordTable Texts { get; private set; }
         public static ImageResourceRecordTable ImageTable { get; private set; }
+
+        public static ColorRecordTable ColorTable { get; private set; }
         public static void Init()
         {
             ItemTable = new ItemRecordTable();
@@ -19,6 +21,7 @@ namespace Project.GameData
             ItemMatchTable = new ItemMatchRecordTable();
             Texts = new TextRecordTable();
             ImageTable = new ImageResourceRecordTable();
+            ColorTable = new ColorRecordTable();
         }
 
         public static void Load()
@@ -29,6 +32,7 @@ namespace Project.GameData
             ItemMatchTable.LoadJson();
             Texts.LoadJson();
             ImageTable.LoadJson();
+            ColorTable.LoadJson();
         }
 
         public static bool IsCompleteLoad()
@@ -39,6 +43,7 @@ namespace Project.GameData
             if (ItemMatchTable == null) return false;
             if (Texts == null) return false;
             if (ImageTable == null) return false;
+            if (ColorTable == null) return false;
             return true;
         }
     }

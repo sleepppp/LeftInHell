@@ -6,49 +6,41 @@ using UnityEngine.EventSystems;
 using System;
 namespace Project.UI
 {
-    public class ItemBlockUI : UIBase, IPointerEnterHandler,IPointerExitHandler
+    using Project.GameData;
+    public class ItemBlockUI : UIBase, IPointerEnterHandler, IPointerExitHandler ,IBeginDragHandler, IDragHandler, IEndDragHandler
     {
-        public event Action<ItemBlockUI> EventClickItemBlock;
-        public event Action<ItemBlockUI> EventMounseEnter;
-        public event Action<ItemBlockUI> EventMouseExit;
+        public event Action<ItemBlockUI> EventPointerEnter;
+        public event Action<ItemBlockUI> EventPoinetExit;
+        public event Action<ItemBlockUI> EventOnClick;
+        public event Action<ItemBlockUI, PointerEventData> EventBeginDrag;
+        public event Action<ItemBlockUI, PointerEventData> EventDrag;
+        public event Action<ItemBlockUI, PointerEventData> EventEndDrag;
 
+        [Header("ItemBlockUI")]
         [SerializeField] ItemUIBase _itemUIBase;
-        [SerializeField] Image _whiteDimmedImage;
+        [SerializeField] Image _backgroundImage;
+        public ItemSlotUI StartSlotUI { get; private set; }
+        public Color OriginBackgroundColor { get; private set; }
         public ItemBlock ItemBlock { get; private set; }
 
-        public void Init(ItemBlock itemBlock,ItemSlotUI slotUI)
+        public void Init(ItemBlock itemBlock, ItemSlotUI startSlotUI)
         {
             ItemBlock = itemBlock;
-
-            float width = ItemSlotUI.SlotUIWidth * itemBlock.Width;
-            float height = ItemSlotUI.SlotUIHeight * itemBlock.Height;
-            //this.RectTransform.SetParent(slotUI.transform);
-            this.RectTransform.pivot = new Vector2(0f, 1f);
-            this.RectTransform.sizeDelta = new Vector2(width, height);
-            this.RectTransform.position = slotUI.transform.position;
-
-            ShowWhiteDimmed(false);
-            Refresh();
+            _itemUIBase.Init(ItemBlock.Item, ItemBlock.Amount);
+            StartSlotUI = startSlotUI;
+            ColorRecord colorRecord = DataTableManager.ColorTable.GetRecord(ItemBlock.Item.ItemTypeRecord.ColorID);
+            _backgroundImage.color = OriginBackgroundColor = colorRecord.GetColor();
+            ResetTransform();
         }
 
-        public void OnClickItemBlock()
+        public void ResetTransform()
         {
-            EventClickItemBlock?.Invoke(this);
-        }
+            float width = ItemSlotUI.CellSize * ItemBlock.Width + ItemSlotUI.Spacing * (ItemBlock.Width);
+            float height = ItemSlotUI.CellSize * ItemBlock.Height + ItemSlotUI.Spacing * (ItemBlock.Height);
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            EventMounseEnter?.Invoke(this);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            EventMouseExit?.Invoke(this);
-        }
-
-        public void ShowWhiteDimmed(bool isShow)
-        {
-            _whiteDimmedImage.gameObject.SetActive(isShow);
+            RectTransform.SetParent(StartSlotUI.transform.parent, true);
+            RectTransform.position = StartSlotUI.transform.position;
+            RectTransform.sizeDelta = new Vector2(width, height);
         }
 
         public void Refresh()
@@ -56,7 +48,50 @@ namespace Project.UI
             if(ItemBlock.IsValid)
             {
                 _itemUIBase.Init(ItemBlock.Item, ItemBlock.Amount);
+                ResetTransform();
             }
+        }
+
+        public void SetBackgroundColor(Color color)
+        {
+            _backgroundImage.color = color;
+        }
+
+        public void ResetBackgroundColor()
+        {
+            SetBackgroundColor(OriginBackgroundColor);
+        }
+
+        public void OnClick()
+        {
+            EventOnClick?.Invoke(this);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            EventPointerEnter?.Invoke(this);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            EventPoinetExit?.Invoke(this);
+        }
+
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            EventBeginDrag?.Invoke(this,eventData);
+
+        }
+
+        public void OnDrag(PointerEventData eventData)
+        {
+            EventDrag?.Invoke(this, eventData);
+        }
+
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            EventEndDrag?.Invoke(this,eventData);
+
         }
     }
 }

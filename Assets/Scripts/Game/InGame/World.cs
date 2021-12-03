@@ -13,10 +13,5 @@ namespace Project
         {
             Player = new Player();
         }
-
-        public void TestInit()
-        {
-            UIManager.AsyncCreateInventoryUI();
-        }
     }
 }

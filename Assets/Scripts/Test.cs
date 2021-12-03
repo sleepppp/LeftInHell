@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Project.GameData;
 
-namespace Project
+namespace Project.UI
 {
     public class Test : MonoBehaviour
     {
-
+        public void OpenInventory()
+        {
+            UIManager.AsyncCreateInventoryUI();
+        }
     }
 }

@@ -8,6 +8,7 @@ namespace Project
     public class Inventory
     {
         public ItemBag Bag { get;private set; }
+        public ItemBag TestBag { get; private set; }
 
         public int CurrentWeight { get; private set; }
 
@@ -28,10 +29,16 @@ namespace Project
             {
                 Debug.LogError("??");
             }
-            if(Bag.TryAddItem(1,30) == false)
+            if(Bag.TryAddItem(5,40) == false)
             {
                 Debug.LogError("???");
             }
+            if(Bag.TryAddItem(1,30) == false)
+            {
+                Debug.LogError("????");
+            }
+
+            TestBag = new ItemBag(DataTableManager.ItemTable.GetRecord(3));
         }
 
         public bool CanAddItem(ItemRecord itemRecord, int amount)

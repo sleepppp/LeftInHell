@@ -7,12 +7,13 @@ namespace Project
 {
     using Project.UI;
     using Project.GameData;
-    //메인 로비로 접속, 테스트용 접속 등등 여러 상황에서 다른 세팅으로 초기화를 진행해야 할 경우, 이런 식으로 Initializer 구현해서 처리
+    //정상 적인 접속이 아닌 테스트용 접속등으로 초기화를 진행해야 할 경우, 이런 식으로 Initializer 구현해서 처리
     public class Initializer : MonoBehaviour
     {
         public Game Game;
         public Canvas MainCanvas;
         public EventSystem EventSystem;
+        public GraphicRaycaster Raycaster;
         public string LoaSceneName;
 
         private IEnumerator Start()
@@ -31,6 +32,7 @@ namespace Project
 
             Game.Instance.Init();
             Game.UIManager.MainCanvas = MainCanvas;
+            Game.UIManager.Raycaster = Raycaster;
             Game.UIManager.EventSystem = EventSystem;
             DontDestroyOnLoad(Game.Instance);
             DontDestroyOnLoad(Game.UIManager.MainCanvas.gameObject);

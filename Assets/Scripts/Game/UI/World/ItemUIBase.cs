@@ -16,27 +16,42 @@ namespace Project.UI
         public void Init(Item item, int amount)
         {
             string path = DataTableManager.ImageTable.GetRecord(item.ItemRecord.ImageID).Path;
-            AssetManager.LoadAssetAsync<Sprite>(path, (sprite) =>
-            {
-                SetItemImage(sprite);
-            });
+            AsyncSetItemImage(path);
             SetItemCount(amount);
             SetItemName(item.Name);
         }
 
+        void AsyncSetItemImage(string path)
+        {
+            //todo SetLoadImage
+            AssetManager.LoadAssetAsync<Sprite>(path, (sprite) =>
+            {
+                SetItemImage(sprite);
+            });
+        }
+
         void SetItemImage(Sprite sprite)
         {
-            ItemImage.sprite = sprite;
+            if (ItemImage != null)
+            {
+                ItemImage.sprite = sprite;
+            }
         }
 
         void SetItemCount(int count)
         {
-            ItemCountText.text = count.ToString();
+            if (ItemCountText != null)
+            {
+                ItemCountText.text = count.ToString();
+            }
         }
 
         void SetItemName(string name)
         {
-            ItemNameText.text = name;
+            if (ItemNameText)
+            {
+                ItemNameText.text = name;
+            }
         }
     }
 }

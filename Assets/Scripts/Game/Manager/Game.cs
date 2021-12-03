@@ -21,8 +21,6 @@ namespace Project
         {
             if(World == null)
                 World = new World();
-
-            World.TestInit();
         }
     }
 }
