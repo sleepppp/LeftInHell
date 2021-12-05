@@ -14,3 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Test: 0
   DefaultWeightCoverage: 10000
+  StartBagWidth: 10
+  StartBagHeight: 30

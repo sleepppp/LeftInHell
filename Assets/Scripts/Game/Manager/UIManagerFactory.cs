@@ -9,7 +9,7 @@ namespace Project.UI
         public static void AsyncCreateInventoryUI()
         {
             string path = "Assets/Resource/Prefab/UI/InventoryUI.prefab";
-            Game.UIManager.CreateUI<InventoryUI>(path,UIKey.InventoryUI, (ui) => 
+            Game.UIManager.CreateUI<InventoryUI>(path, UIKey.InventoryUI, (ui) =>
             {
                 ui.Init();
             });

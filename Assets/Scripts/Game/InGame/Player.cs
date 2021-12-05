@@ -6,11 +6,10 @@ namespace Project
 {
     public class Player
     {
-        public Inventory Inventory { get; private set; }
-
+        public PlayerInventory Inventory { get; private set; }
         public Player()
         {
-            Inventory = new Inventory();
+            Inventory = new PlayerInventory();
         }
     }
 }

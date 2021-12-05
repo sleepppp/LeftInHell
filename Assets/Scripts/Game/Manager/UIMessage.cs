@@ -8,7 +8,7 @@ namespace Project.UI
     {
         public static void OnNotifyItemRemove()
         {
-            Game.UIManager.GetUI<InventoryUI>(UIKey.InventoryUI)?.Refresh();
+            
         }
     }
 }

@@ -20,5 +20,7 @@ namespace Project
         [Tooltip("테스트 상수 값입니다")] public int Test;
         [Header("Item")]
         [Tooltip("플레이어 기본 감당 무게")] public int DefaultWeightCoverage = 10;
+        public int StartBagWidth = 10;
+        public int StartBagHeight = 10;
     }
 }
