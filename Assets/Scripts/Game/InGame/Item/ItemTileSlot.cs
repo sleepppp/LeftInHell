@@ -1,7 +1,7 @@
 
 namespace Project
 {
-    public class ItemSlotTile : IItemSlot
+    public class ItemTileSlot : IItemSlot
     {
         private readonly int m_indexX;
         private readonly int m_indexY;
@@ -14,7 +14,7 @@ namespace Project
         public IItemContainer Owner => m_owner;
         public InventoryItem InventoryItem => m_inventoryItem;
 
-        public ItemSlotTile(IItemContainer owner,int indexX, int indexY)
+        public ItemTileSlot(IItemContainer owner,int indexX, int indexY)
         {
             m_owner = owner;
             m_indexX = indexX;
@@ -23,7 +23,7 @@ namespace Project
 
         public bool IsEmpty()
         {
-            return InventoryItem != null;
+            return InventoryItem == null;
         }
 
         public ItemExeption IsPossiblyDisarmItem(InventoryItem inventoryItem)

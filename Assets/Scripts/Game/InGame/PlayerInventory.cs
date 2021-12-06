@@ -6,6 +6,7 @@ namespace Project
 {
     using Project.GameData;
 
+    //임시
     struct CreateData : IGetItemData
     {
         public ItemRecord ItemRecord;
@@ -46,19 +47,37 @@ namespace Project
             ConstConfig config = DataTableManager.ConstConfig;
             m_bag = new ItemTilingContainer(this, config.StartBagWidth, config.StartBagHeight);
 
-            ////test int
-            //CreateData data = new CreateData();
-            //data.ItemCount = 10;
-            //data.ItemRecord = DataTableManager.ItemTable.GetRecord(1);
-            //data.ItemTypeRecord = DataTableManager.ItemTypeTable.GetRecord(data.ItemRecord.Type);
-            //
-            //m_bag.TryAddItem(data);
+            //test int
+            for (int i = 0; i < 3; ++i)
+            {
+                CreateData data = new CreateData();
+                data.ItemCount = 3;
+                data.ItemRecord = DataTableManager.ItemTable.GetRecord(1);
+                data.ItemTypeRecord = DataTableManager.ItemTypeTable.GetRecord(data.ItemRecord.Type);
+
+                ItemAssert.Assert(m_bag.TryAddItem(data));
+            }
+
+            for(int i = 0; i< 5; ++i)
+            {
+                CreateData data = new CreateData();
+                data.ItemCount = 5;
+                data.ItemRecord = DataTableManager.ItemTable.GetRecord(5);
+                data.ItemTypeRecord = DataTableManager.ItemTypeTable.GetRecord(data.ItemRecord.Type);
+
+                ItemAssert.Assert(m_bag.TryAddItem(data));
+            }
         }
 
         //지금은 Bag 하나만 있어서 m_bag에게만 요청하지만 후에 PlayerInventory에 여러 엘리먼트(장착 슬롯 등등)이 추가 되면 추가 작업 필요
         public List<IGetItemData> GetAllItemData()
         {
             return m_bag.GetAllItemData();
+        }
+
+        public List<InventoryItem> GetAllItem()
+        {
+            return m_bag.GetAllItem();
         }
 
         public ItemExeption IsPossiblyAddItem(IGetItemData itemData)

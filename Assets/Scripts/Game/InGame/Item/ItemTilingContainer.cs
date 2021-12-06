@@ -9,7 +9,7 @@ namespace Project
     //해당되는 타일링 슬롯들에 아이템을 장착한다
     public class ItemTilingContainer : IItemContainer
     {
-        private readonly ItemSlotTile[,] m_itemSlots;
+        private readonly ItemTileSlot[,] m_itemSlots;
         private readonly int m_width;
         private readonly int m_height;
         private readonly IInventory m_ownerInventory;
@@ -24,12 +24,12 @@ namespace Project
             m_ownerInventory = inventory;  
             m_width = width;
             m_height = height;
-            m_itemSlots = new ItemSlotTile[height, width];
+            m_itemSlots = new ItemTileSlot[height, width];
             for(int y =0;y < height; ++y)
             {
                 for(int x=0;x < width; ++x)
                 {
-                    m_itemSlots[y, x] = new ItemSlotTile(inventory, x, y);
+                    m_itemSlots[y, x] = new ItemTileSlot(this, x, y);
                 }
             }
         }
@@ -44,13 +44,18 @@ namespace Project
             return result;
         }
 
+        public List<InventoryItem> GetAllItem()
+        {
+            return m_items;
+        }
+
         public ItemExeption IsPossiblyEquipItem(IItemSlot iItemSlot, InventoryItem inventoryItem)
         {
             if (iItemSlot.Owner != this)   //내가 관리하는 슬롯이 아닐경우
                 return ItemExeption.Failed_WrongOwner;
-            if (inventoryItem.OwnerSlot != null)
-                return ItemExeption.Faield_AlreadyHasOwner;
-            ItemSlotTile tileSlot = iItemSlot as ItemSlotTile;  //캐스팅 미스 났을경우
+            //if (inventoryItem.OwnerSlot != null)
+            //    return ItemExeption.Faield_AlreadyHasOwner;
+            ItemTileSlot tileSlot = iItemSlot as ItemTileSlot;  //캐스팅 미스 났을경우
             if (tileSlot == null)
                 return ItemExeption.Failed_Casting;
             ItemExeption result = tileSlot.IsPossiblyEquipItem(inventoryItem); //타일 자체 검사
@@ -78,7 +83,7 @@ namespace Project
                 int remainAmount = itemData.Amount;
                 foreach(var item in m_items)
                 {
-                    if(item.Data.GetItemTypeRecord().ID == itemData.GetItemTypeRecord().ID)
+                    if(item.Data.GetItemRecord().ID == itemData.GetItemRecord().ID)
                     {
                         int canAddedAmount = item.Data.MaxAmount - item.Data.Amount;
                         remainAmount -= canAddedAmount;
@@ -114,7 +119,7 @@ namespace Project
                 int remainAmount = addData.Amount;
                 foreach(var item in m_items)
                 {
-                    if(item.Data.GetItemTypeRecord().ID == addData.GetItemTypeRecord().ID)
+                    if(item.Data.GetItemRecord().ID == addData.GetItemRecord().ID)
                     {
                         int canAddItemCount = item.Data.MaxAmount - item.Data.Amount;
                         int addCount = remainAmount >= canAddItemCount ? canAddItemCount : remainAmount;
@@ -176,13 +181,13 @@ namespace Project
             if (result != ItemExeption.Succeeded)
                 return result;
 
-            ItemSlotTile tileSlot = iItemSlot as ItemSlotTile;
+            ItemTileSlot startSlot = iItemSlot as ItemTileSlot;
 
-            inventoryItem.OnBindSlot(tileSlot);
+            inventoryItem.OnBindSlot(startSlot);
 
-            Foreach(tileSlot.IndexX, tileSlot.IndexY, inventoryItem.Width, inventoryItem.Height, (slot) =>
+            Foreach(startSlot.IndexX, startSlot.IndexY, inventoryItem.Width, inventoryItem.Height, (slot) =>
             {
-                ItemExeption exeption = tileSlot.TryEquipItem(inventoryItem);
+                ItemExeption exeption = slot.TryEquipItem(inventoryItem);
                 if (exeption != ItemExeption.Succeeded)
                 {
                     throw new Exception("아이템을 해당 슬롯에 장착할 수 없습니다");//여기서 막히면 골치아파짐
@@ -200,14 +205,43 @@ namespace Project
             if (result != ItemExeption.Succeeded)
                 return result;
 
-            ItemSlotTile tileSlot = inventoryItem.OwnerSlot as ItemSlotTile;
-            tileSlot.TryDisarmItem(inventoryItem);
+            ItemTileSlot tileSlot = inventoryItem.OwnerSlot as ItemTileSlot;
+
+            Foreach(tileSlot.IndexX, tileSlot.IndexY, inventoryItem.Width, inventoryItem.Height, (slot) => 
+            {
+                ItemAssert.Assert(slot.TryDisarmItem(inventoryItem));
+            });
+
             inventoryItem.OnDisarmSlot();
 
             m_items.Remove(inventoryItem);
 
             return ItemExeption.Succeeded;
         }
+
+        public bool IsOutofRange(int indexX, int indexY)
+        {
+            if (indexX < 0 || indexX >= Width) return true;
+            if (indexY < 0 || indexY >= Height) return true;
+            return false;
+        }
+
+        public void Foreach(int startX, int startY, int width, int height, Action<ItemTileSlot> query)
+        {
+            ItemTileSlot tempSlot = null;
+            for (int y = startY; y < startY + height; ++y)
+            {
+                for (int x = startX; x < startX + width; ++x)
+                {
+                    tempSlot = GetSlot(x, y);
+                    if (tempSlot != null)
+                    {
+                        query?.Invoke(tempSlot);
+                    }
+                }
+            }
+        }
+
 
         ItemExeption TryPushItem(int itemID, int amount)
         {
@@ -217,7 +251,7 @@ namespace Project
             {
                 if(IsEmptyArea(slot.IndexX,slot.IndexY,itemRecord.Width,itemRecord.Height))
                 {
-                    InventoryItem newItem = new InventoryItem(slot, itemID, amount);
+                    InventoryItem newItem = new InventoryItem(itemID, amount);
                     TryEquipItem(slot, newItem);
                     return true;
                 }
@@ -226,7 +260,7 @@ namespace Project
             return ItemExeption.Succeeded;
         }
 
-        ItemSlotTile GetSlot(int indexX, int indexY)
+        ItemTileSlot GetSlot(int indexX, int indexY)
         {
             if (IsOutofRange(indexX, indexY))
                 return null;
@@ -305,32 +339,9 @@ namespace Project
             return result;
         }
 
-        bool IsOutofRange(int indexX, int indexY)
+        void ForeachWithBreak(int startX, int startY, int width, int height, Func<ItemTileSlot, bool> query)
         {
-            if (indexX < 0 || indexX >= Width) return true;
-            if (indexY < 0 || indexY >= Height) return true;
-            return false;
-        }
-
-        public void Foreach(int startX, int startY, int width, int height,Action<ItemSlotTile> query)
-        {
-            ItemSlotTile tempSlot = null;
-            for(int y= startY; y < startY + height; ++y)
-            {
-                for(int x= startX; x < startX + width; ++x)
-                {
-                    tempSlot = GetSlot(x, y);
-                    if(tempSlot != null)
-                    {
-                        query?.Invoke(tempSlot);
-                    }
-                }
-            }
-        }
-
-        void ForeachWithBreak(int startX, int startY, int width, int height, Func<ItemSlotTile, bool> query)
-        {
-            ItemSlotTile tempSlot = null;
+            ItemTileSlot tempSlot = null;
             for (int y = startY; y < startY + height; ++y)
             {
                 for (int x = startX; x < startX + width; ++x)

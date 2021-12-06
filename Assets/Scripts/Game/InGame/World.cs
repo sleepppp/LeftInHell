@@ -8,7 +8,6 @@ namespace Project
     public partial class World
     {
         public Player Player { get; private set; }
-
         public World()
         {
             Player = new Player();

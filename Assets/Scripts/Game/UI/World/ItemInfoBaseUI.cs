@@ -11,6 +11,8 @@ namespace Project.UI
         [SerializeField] Text m_itemCountText;
         [SerializeField] Image m_itemBackgroundImage;
 
+        public Color BackgroundColor { get { return m_itemBackgroundImage.color; } }
+
         public void Init(IGetItemData itemData)
         {
             Init(itemData.GetItemRecord().ID, itemData.Amount);
@@ -28,6 +30,14 @@ namespace Project.UI
             {
                 SetItemSprite(sprite);
             });
+        }
+
+        public void SetBackgroundColor(Color color)
+        {
+            if (m_itemBackgroundImage != null)
+            {
+                m_itemBackgroundImage.color = color;
+            }
         }
 
         void SetItemSprite(Sprite sprite)
@@ -51,14 +61,6 @@ namespace Project.UI
             if(m_itemCountText != null)
             {
                 m_itemCountText.text = count.ToString();
-            }
-        }
-
-        void SetBackgroundColor(Color color)
-        {
-            if(m_itemBackgroundImage != null)
-            {
-                m_itemBackgroundImage.color = color;
             }
         }
     }

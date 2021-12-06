@@ -11,7 +11,8 @@ namespace Project
         ItemExeption TryDisarmItem(InventoryItem inventoryItem);
         ItemExeption TryAddItem(IGetItemData addData);
         List<IGetItemData> GetAllItemData();
-        
+        List<InventoryItem> GetAllItem();
+
     }
 
     public interface IInventory : IItemContainer

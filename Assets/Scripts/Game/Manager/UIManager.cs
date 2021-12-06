@@ -23,6 +23,7 @@ namespace Project.UI
         public Canvas MainCanvas;
         public EventSystem EventSystem;
         public GraphicRaycaster Raycaster;
+        public ItemDragAndDropManager DragAndDrop;
 
         readonly Dictionary<UIKey, ManagedUIBase> _uiContainer = new Dictionary<UIKey, ManagedUIBase>();
 
@@ -60,7 +61,7 @@ namespace Project.UI
             return result as T;
         }
 
-        public T Raycast<T>(Vector2 screenPoint, bool onlyFirstHit = false) where T :UIBase
+        public T Raycast<T>(Vector2 screenPoint) where T :UIBase
         {
             //todo GC Optimaze
             T output = null;
@@ -70,26 +71,12 @@ namespace Project.UI
             List<RaycastResult> resultList = new List<RaycastResult>();
             Raycaster.Raycast(eventData, resultList);
 
-            if (onlyFirstHit == false)
+            foreach (var result in resultList)
             {
-                foreach (var result in resultList)
+                output = result.gameObject?.GetComponent<T>();
+                if (output != null)
                 {
-                    output = result.gameObject?.GetComponent<T>();
-                    if (output)
-                    {
-                        return output;
-                    }
-                }
-            }
-            else
-            {
-                if(resultList.Count != 0)
-                {
-                    output = resultList[0].gameObject?.GetComponent<T>();
-                    if(output)
-                    {
-                        return output;
-                    }
+                    return output;
                 }
             }
 

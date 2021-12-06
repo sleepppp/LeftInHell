@@ -7,12 +7,12 @@ namespace Project
         private readonly ItemData m_itemData;
         public IItemSlot OwnerSlot { get; private set; }
         public IGetItemData Data => m_itemData;
+        public IHandleItemData Handle => m_itemData;
         public int Width => m_itemData.Width;
         public int Height => m_itemData.Height;
 
-        public InventoryItem(IItemSlot owner, int itemID, int amount)
+        public InventoryItem(int itemID, int amount)
         {
-            OwnerSlot = owner;
             m_itemData = new ItemData(itemID, amount);
         }
 

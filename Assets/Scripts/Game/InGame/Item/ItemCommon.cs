@@ -48,4 +48,21 @@ namespace Project
         ItemExeption TryAddAmount(int amount);
         ItemExeption TryRemoveAmount(int amount);
     }
+
+    public static class ItemAssert
+    {
+        public static bool Assert(ItemExeption exeption, bool showLog = true)
+        {
+            if (exeption == ItemExeption.Succeeded)
+            {
+                return true;
+            }
+            else
+            {
+                if(showLog)
+                    UnityEngine.Debug.LogError(exeption);
+                return false;
+            }
+        }
+    }
 }
