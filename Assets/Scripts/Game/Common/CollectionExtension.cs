@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 namespace Project
 {
     public static class CollectionExtension
@@ -15,6 +16,14 @@ namespace Project
             if (list.Contains(value) == false)
             {
                 list.Add(value);
+            }
+        }
+
+        public static void Foreach<TKey,TValue>(this Dictionary<TKey,TValue> dic,Action<TValue> query)
+        {
+            foreach(var item in dic)
+            {
+                query.Invoke(item.Value);
             }
         }
     }

@@ -6,108 +6,56 @@ namespace Project
 {
     using Project.GameData;
 
-    //임시
-    struct CreateData : IGetItemData
+    public class PlayerInventory : PObject, IItemContainer
     {
-        public ItemRecord ItemRecord;
-        public ItemTypeRecord ItemTypeRecord;
-        public int ItemCount;
+        readonly ItemTileContainer m_itemTileContainer;
 
-        public int Amount => ItemCount;
-
-        public int MaxAmount => ItemRecord.MaxStackAmount;
-
-        public int Width => ItemRecord.Width;
-
-        public int Height => ItemRecord.Height;
-
-        public bool IsStackable => ItemTypeRecord.IsStackable;
-
-        public bool IsConsumeable => ItemTypeRecord.IsConsumeable;
-
-        public ItemRecord GetItemRecord()
-        {
-            return ItemRecord;
-        }
-
-        public ItemTypeRecord GetItemTypeRecord()
-        {
-            return ItemTypeRecord;
-        }
-    }
-
-    public sealed class PlayerInventory : IInventory
-    {
-        readonly ItemTilingContainer m_bag;
-
-        public ItemTilingContainer Bag { get { return m_bag; } }
+        public ItemTileContainer BagContainer { get { return m_itemTileContainer; } }
+        public List<IItemSlot> Slots => m_itemTileContainer.Slots;
+        public List<IItem> Items => m_itemTileContainer.Items;
 
         public PlayerInventory()
         {
             ConstConfig config = DataTableManager.ConstConfig;
-            m_bag = new ItemTilingContainer(this, config.StartBagWidth, config.StartBagHeight);
+            m_itemTileContainer = new ItemTileContainer(config.StartBagWidth, config.StartBagHeight);
 
-            //test int
-            for (int i = 0; i < 3; ++i)
-            {
-                CreateData data = new CreateData();
-                data.ItemCount = 3;
-                data.ItemRecord = DataTableManager.ItemTable.GetRecord(1);
-                data.ItemTypeRecord = DataTableManager.ItemTypeTable.GetRecord(data.ItemRecord.Type);
-
-                ItemAssert.Assert(m_bag.TryAddItem(data));
-            }
-
-            for(int i = 0; i< 5; ++i)
-            {
-                CreateData data = new CreateData();
-                data.ItemCount = 5;
-                data.ItemRecord = DataTableManager.ItemTable.GetRecord(5);
-                data.ItemTypeRecord = DataTableManager.ItemTypeTable.GetRecord(data.ItemRecord.Type);
-
-                ItemAssert.Assert(m_bag.TryAddItem(data));
-            }
+            AddItem(1, 100);
+            AddItem(5, 100);
         }
 
-        //지금은 Bag 하나만 있어서 m_bag에게만 요청하지만 후에 PlayerInventory에 여러 엘리먼트(장착 슬롯 등등)이 추가 되면 추가 작업 필요
-        public List<IGetItemData> GetAllItemData()
+        public bool AddItem(int itemID, int amount)
         {
-            return m_bag.GetAllItemData();
+            return m_itemTileContainer.AddItem(itemID, amount);
         }
 
-        public List<InventoryItem> GetAllItem()
+        public bool CanAddItem(int itemID, int amount)
         {
-            return m_bag.GetAllItem();
+            return m_itemTileContainer.AddItem(itemID, amount);
         }
 
-        public ItemExeption IsPossiblyAddItem(IGetItemData itemData)
+        public bool CanEquipItem(Puid slotPUID, int itemID, int amount)
         {
-            return m_bag.IsPossiblyAddItem(itemData);
+            return m_itemTileContainer.CanEquipItem(slotPUID, itemID, amount);
         }
 
-        public ItemExeption IsPossiblyDisarmItem(InventoryItem inventoryItem)
+        public bool DisarmItem(Puid itemPUID)
         {
-            return m_bag.IsPossiblyDisarmItem(inventoryItem);
+            return m_itemTileContainer.DisarmItem(itemPUID);
         }
 
-        public ItemExeption IsPossiblyEquipItem(IItemSlot iItemSlot, InventoryItem inventoryItem)
+        public bool EquipItem(Puid slotPUID, int itemID, int amount)
         {
-            return m_bag.IsPossiblyEquipItem(iItemSlot, inventoryItem);
+            return m_itemTileContainer.EquipItem(slotPUID, itemID, amount);
         }
 
-        public ItemExeption TryAddItem(IGetItemData addData)
+        public Item GetItem(Puid puid)
         {
-            return m_bag.TryAddItem(addData);
+            return m_itemTileContainer.GetItem(puid);
         }
 
-        public ItemExeption TryDisarmItem(InventoryItem inventoryItem)
+        public ItemSlotBase GetSlot(Puid puid)
         {
-            return m_bag.TryDisarmItem(inventoryItem);
-        }
-
-        public ItemExeption TryEquipItem(IItemSlot iItemSlot, InventoryItem inventoryItem)
-        {
-            return m_bag.TryEquipItem(iItemSlot, inventoryItem);
+            return m_itemTileContainer.GetSlot(puid);
         }
     }
 }

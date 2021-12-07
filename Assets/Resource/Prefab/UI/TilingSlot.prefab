@@ -84,9 +84,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2352243165475233917}
-  - component: {fileID: 6027635471380104908}
   - component: {fileID: 8542843461838091104}
   - component: {fileID: 2481140451085530678}
+  - component: {fileID: 6797999620794251952}
   m_Layer: 5
   m_Name: TilingSlot
   m_TagString: Untagged
@@ -114,22 +114,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &6027635471380104908
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2126358941080000237}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 66d823345c4e3cf4e87f89078003cb8d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  SafeAreaActionTypeEnum: 0
-  ConformX: 1
-  ConformY: 1
-  SafeAreaTransform: {fileID: 0}
 --- !u!222 &8542843461838091104
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -168,3 +152,15 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &6797999620794251952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2126358941080000237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6b8d78d2b2cb7704cbb9916c165ea74d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

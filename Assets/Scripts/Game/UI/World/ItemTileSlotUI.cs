@@ -4,39 +4,20 @@ using UnityEngine;
 
 namespace Project.UI
 {
-    //todo BaseSlotUI ¸¸µé±â
+    using Project.GameData;
     public class ItemTileSlotUI : ItemSlotBaseUI
     {
-        public override bool IsPossibleDrop(InventoryItem inventoryItem)
+        public ItemTileSlot ItemTileSlot { get { return Slot as ItemTileSlot; } }
+
+        public static Vector2 GetItemSize(ItemRecord itemRecord)
         {
-            bool result = ItemAssert.Assert(Slot.Owner.IsPossiblyEquipItem(Slot,inventoryItem),false);
-            if(result == false)
+            float slotSize = 50f;
+            float slotSpacing = 1f;
+            Vector2 result = new Vector2()
             {
-                result = ItemAssert.Assert(Slot.InventoryItem.Handle.IsPossiblyAddAmount(inventoryItem.Data.Amount),false);
-            }
-            return result;
-        }
-
-        public override bool TryDrop(InventoryItem inventoryItem)
-        {
-            bool result = ItemAssert.Assert(Slot.Owner.TryEquipItem(Slot, inventoryItem),false);
-            if(result == false)
-            {
-                result = ItemAssert.Assert(Slot.InventoryItem.Handle.TryAddAmount(inventoryItem.Data.Amount));
-            }
-            else
-            {
-                InventoryItemUI.CreateUI((ui) =>
-                {
-                    ui.Init(inventoryItem, this);
-                });
-            }
-
-            if(result)
-            {
-                Game.UIManager.GetUI<InventoryUI>(UIKey.InventoryUI)?.Refresh();
-            }
-
+                x = slotSize * itemRecord.Width + slotSpacing * itemRecord.Width,
+                y = slotSize * itemRecord.Height + slotSpacing * itemRecord.Height
+            };
             return result;
         }
     }

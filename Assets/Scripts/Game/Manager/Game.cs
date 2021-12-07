@@ -22,5 +22,14 @@ namespace Project
             if(World == null)
                 World = new World();
         }
+
+        public static bool Assert(bool isSucceeded)
+        {
+            if(isSucceeded == false)
+            {
+                Debug.LogError(isSucceeded);
+            }
+            return isSucceeded;
+        }
     }
 }

@@ -1200,7 +1200,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6373351897364685113}
-  - component: {fileID: 4138007663725892870}
+  - component: {fileID: 2025751478769082876}
   m_Layer: 5
   m_Name: TilingContainerUI
   m_TagString: Untagged
@@ -1229,7 +1229,7 @@ RectTransform:
   m_AnchoredPosition: {x: -19, y: -11.0696}
   m_SizeDelta: {x: 602.8638, y: 533.296}
   m_Pivot: {x: 1, y: 0.5}
---- !u!114 &4138007663725892870
+--- !u!114 &2025751478769082876
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1238,14 +1238,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 9063566619406751092}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f970f7c10a455d34db163428d44187dd, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d907f9dfc091114c9ce1c814df68d0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   SafeAreaActionTypeEnum: 0
   ConformX: 1
   ConformY: 1
   SafeAreaTransform: {fileID: 0}
-  m_tilingSlotPrefab: {fileID: 2126358941080000237, guid: bded25384c82804459d3f961499cd455, type: 3}
-  m_inventoryItemPrefab: {fileID: 9168923458666229254, guid: 8176c5b082a7b9a4295fcc8e13483a75, type: 3}
+  m_slotPrefab: {fileID: 2126358941080000237, guid: bded25384c82804459d3f961499cd455, type: 3}
   m_scrollRect: {fileID: 5284695996415641060}
   m_gridLayoutGroup: {fileID: 1108900562188009285}

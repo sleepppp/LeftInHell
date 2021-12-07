@@ -14,5 +14,14 @@ namespace Project.UI
                 ui.Init();
             });
         }
+
+        public static void AsynCreateItemOptionMenuUI(IItem item,Vector3 position)
+        {
+            string path = "Assets/Resource/Prefab/UI/ItemOptionMenuUI.prefab";
+            Game.UIManager.CreateUI<ItemOptionMenuUI>(path, UIKey.ItemOptionMenuUI, (ui) => 
+            {
+                ui.Init(item,position);
+            });
+        }
     }
 }

@@ -4,16 +4,13 @@ using UnityEngine;
 
 namespace Project.UI
 {
-    public abstract class ItemSlotBaseUI : UIBase
+    public class ItemSlotBaseUI : UIBase
     {
         public IItemSlot Slot { get; private set; }
 
-        public void Init(IItemSlot itemSlot)
+        public void Init(IItemSlot slot)
         {
-            Slot = itemSlot;
+            Slot = slot;
         }
-
-        public abstract bool IsPossibleDrop(InventoryItem inventoryItem);
-        public abstract bool TryDrop(InventoryItem inventoryItem);
     }
 }

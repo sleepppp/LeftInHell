@@ -9,6 +9,7 @@ namespace Project.UI
     public enum UIKey : int
     {
         InventoryUI = 1,
+        ItemOptionMenuUI,
     }
 
     public enum UISortingLayer : int
@@ -23,11 +24,16 @@ namespace Project.UI
         public Canvas MainCanvas;
         public EventSystem EventSystem;
         public GraphicRaycaster Raycaster;
-        public ItemDragAndDropManager DragAndDrop;
+        public ItemDragAndDropSystem DragAndDropSystem;
 
         readonly Dictionary<UIKey, ManagedUIBase> _uiContainer = new Dictionary<UIKey, ManagedUIBase>();
 
         public Rect SafeArea { get { return Screen.safeArea; } }
+
+        public UIManager()
+        {
+            DragAndDropSystem = new ItemDragAndDropSystem();
+        }
 
         public void CreateUI<T>(string path,UIKey uiKey, Action<T> callback) where T : ManagedUIBase
         {

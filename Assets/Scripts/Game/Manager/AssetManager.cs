@@ -20,5 +20,19 @@ namespace Project
                 callback?.Invoke(handle.Result);
             };
         }
+
+        public static void Instantiate<T>(string filePath, Action<T> callback, Transform parent = null) where T : MonoBehaviour
+        {
+            LoadAssetAsync<GameObject>(filePath, (prefab) => 
+            {
+                GameObject newObject = null;
+                if (parent)
+                    newObject = GameObject.Instantiate(prefab, parent);
+                else
+                    newObject = GameObject.Instantiate(prefab);
+
+                callback?.Invoke(newObject.GetComponent<T>());
+            });
+        }
     }
 }
