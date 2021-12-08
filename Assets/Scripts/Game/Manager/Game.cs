@@ -21,6 +21,8 @@ namespace Project
         {
             if(World == null)
                 World = new World();
+
+            UIManager.AsyncDragAndDropSystem();
         }
 
         public static bool Assert(bool isSucceeded)

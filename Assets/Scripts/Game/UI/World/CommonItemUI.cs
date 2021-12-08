@@ -15,12 +15,11 @@ namespace Project.UI
 
         Color m_originColor;
 
-        public float OriginBackgroundAlpha { get { return m_originColor.a; } }
+        public float OriginBackgroundAlpha { get { return 0.3f; } }
         public Color OriginColor { get { return m_originColor; } }
 
         public void Init(int itemID, int amount)
         {
-            m_originColor = m_backgroundImage.color;
             ItemRecord itemRecord = DataTableManager.ItemTable.GetRecord(itemID);
             ItemTypeRecord typeRecord = DataTableManager.ItemTypeTable.GetRecord(itemRecord.Type);
 
@@ -30,6 +29,14 @@ namespace Project.UI
             SetBackgroundColor(new Color(color.r, color.g, color.b, OriginBackgroundAlpha));
             string path = DataTableManager.ImageTable.GetRecord(itemRecord.ImageID).Path;
             AssetManager.LoadAssetAsync<Sprite>(path, (sprite) => { SetItemSprite(sprite); });
+            m_originColor = m_backgroundImage.color;
+        }
+        public void SetBackgroundColor(Color color)
+        {
+            if (m_backgroundImage != null)
+            {
+                m_backgroundImage.color = color;
+            }
         }
 
         void SetItemSprite(Sprite sprite)
@@ -37,14 +44,6 @@ namespace Project.UI
             if(m_itemImage != null)
             {
                 m_itemImage.sprite = sprite;
-            }
-        }
-
-        void SetBackgroundColor(Color color)
-        {
-            if(m_backgroundImage != null)
-            {
-                m_backgroundImage.color = color;
             }
         }
 

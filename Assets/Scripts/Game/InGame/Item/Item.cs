@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Project
 {
-    public class Item : PObject,  IItem, IItemHandle ,IClone<Item>
+    public partial class Item : PObject,  IItem, IItemHandle ,IClone<Item>
     {
         readonly ItemRecord m_itemRecord;
         readonly ItemTypeRecord m_itemTypeRecord;
@@ -70,6 +70,28 @@ namespace Project
         {
             m_ownerSlot = slot;
             return true;
+        }
+
+        public virtual bool CanMerge(int itemID, int amount)
+        {
+            if(itemID == ItemRecord.ID && 
+                ItemTypeRecord.IsStackable == true && 
+                ItemRecord.MaxStackAmount - Amount >= amount)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public virtual bool TryMerge(int itemID, int amount)
+        {
+            if (CanMerge(itemID, amount) == false)
+                return false;
+
+            return AddAmount(amount);
         }
     }
 }

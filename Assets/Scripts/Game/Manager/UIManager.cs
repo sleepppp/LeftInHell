@@ -10,13 +10,7 @@ namespace Project.UI
     {
         InventoryUI = 1,
         ItemOptionMenuUI,
-    }
-
-    public enum UISortingLayer : int
-    {
-        DefaultDown = -1,
-        Default = 0,
-        DefaultUp = 1
+        DragAndDropSystem,
     }
 
     public partial class UIManager
@@ -24,16 +18,10 @@ namespace Project.UI
         public Canvas MainCanvas;
         public EventSystem EventSystem;
         public GraphicRaycaster Raycaster;
-        public ItemDragAndDropSystem DragAndDropSystem;
 
         readonly Dictionary<UIKey, ManagedUIBase> _uiContainer = new Dictionary<UIKey, ManagedUIBase>();
 
         public Rect SafeArea { get { return Screen.safeArea; } }
-
-        public UIManager()
-        {
-            DragAndDropSystem = new ItemDragAndDropSystem();
-        }
 
         public void CreateUI<T>(string path,UIKey uiKey, Action<T> callback) where T : ManagedUIBase
         {
@@ -69,13 +57,9 @@ namespace Project.UI
 
         public T Raycast<T>(Vector2 screenPoint) where T :UIBase
         {
-            //todo GC Optimaze
             T output = null;
 
-            PointerEventData eventData = new PointerEventData(EventSystem);
-            eventData.position = screenPoint;
-            List<RaycastResult> resultList = new List<RaycastResult>();
-            Raycaster.Raycast(eventData, resultList);
+            List<RaycastResult> resultList = RaycastGetList(screenPoint);
 
             foreach (var result in resultList)
             {
@@ -87,6 +71,16 @@ namespace Project.UI
             }
 
             return null;
+        }
+
+        public List<RaycastResult> RaycastGetList(Vector2 screenPoint)
+        {
+            //todo GC Optimaze
+            PointerEventData eventData = new PointerEventData(EventSystem);
+            eventData.position = screenPoint;
+            List<RaycastResult> resultList = new List<RaycastResult>();
+            Raycaster.Raycast(eventData, resultList);
+            return resultList;
         }
 
         void AddUI(UIKey key, ManagedUIBase uiBase)

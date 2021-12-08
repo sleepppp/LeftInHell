@@ -16,18 +16,18 @@ namespace Project.UI
         ItemTileContainer m_itemTileContainer;
 
         readonly Dictionary<Puid, ItemTileSlotUI> m_slotUIContainer = new Dictionary<Puid, ItemTileSlotUI>();
-        readonly Dictionary<Puid, InventoryItemUI> m_itemContainer = new Dictionary<Puid,InventoryItemUI>();
+        readonly List<InventoryItemUI> m_itemContainer = new List<InventoryItemUI>();
 
         public IItemContainer ItemContainer => m_itemTileContainer;
 
         void Start()
         {
-            Game.UIManager.DragAndDropSystem.RegisterContainer(this);
+            Game.UIManager.GetUI<DragAndDropSystem>(UIKey.DragAndDropSystem).RegisterContainerUI(this);
         }
 
         void OnDestroy()
         {
-            Game.UIManager.DragAndDropSystem.UnRegisterContainer(this);
+            Game.UIManager.GetUI<DragAndDropSystem>(UIKey.DragAndDropSystem).UnRegisterContainerUI(this);
         }
 
         public void Init(ItemTileContainer itemContainer)
@@ -52,6 +52,9 @@ namespace Project.UI
 
         public void Refresh()
         {
+            foreach (var item in m_itemContainer)
+                item.gameObject.SetActive(false);
+
             List<IItem> itemList = m_itemTileContainer.Items;
             foreach(var item in itemList)
             {
@@ -67,17 +70,17 @@ namespace Project.UI
         {
             foreach(var item in m_itemContainer)
             {
-                if(item.Value.gameObject.activeSelf == false)
+                if(item.gameObject.activeSelf == false)
                 {
-                    item.Value.gameObject.SetActive(true);
-                    callback?.Invoke(item.Value);
+                    item.gameObject.SetActive(true);
+                    callback?.Invoke(item);
                     return;
                 }
             }
 
             InventoryItemUI.CreateUI((ui)=> 
             {
-                m_itemContainer.Add(ui.Item.Puid, ui);
+                m_itemContainer.Add(ui);
                 callback?.Invoke(ui);
             });
         }
@@ -85,14 +88,6 @@ namespace Project.UI
         ItemTileSlotUI GetSlotUI(Puid slotPuid)
         {
             return m_slotUIContainer.GetValue(slotPuid);
-        }
-
-        public void OnEventStartDrag(InventoryItemUI inventoryItemUI)
-        {
-            if(m_itemContainer.ContainsKey(inventoryItemUI.Item.Puid))
-            {
-                m_itemContainer.Remove(inventoryItemUI.Item.Puid);
-            }
         }
     }
 }

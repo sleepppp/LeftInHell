@@ -3,12 +3,30 @@ using UnityEngine.EventSystems;
 using System;
 namespace Project.UI
 {
-    public class InventoryItemUI : UIBase, IRefresh,IBeginDragHandler
+    using GameData;
+    public class InventoryItemUI : UIBase, IRefresh ,IBeginDragHandler
     {
         public static void CreateUI(Action<InventoryItemUI> callback)
         {
             string path = "Assets/Resource/Prefab/UI/InventoryItem.prefab";
             AssetManager.Instantiate<InventoryItemUI>(path, callback);
+        }
+
+        public static Vector2 GetItemSize(ItemRecord itemRecord)
+        {
+            float slotSize = 50f;
+            float slotSpacing = 0f;
+            Vector2 result = new Vector2()
+            {
+                x = slotSize * itemRecord.Width + slotSpacing * itemRecord.Width,
+                y = slotSize * itemRecord.Height + slotSpacing * itemRecord.Height
+            };
+            return result;
+        }
+
+        public static Vector2 GetItemSize(int itemID)
+        {
+            return GetItemSize(DataTableManager.ItemTable.GetRecord(itemID));
         }
 
         [SerializeField] CommonItemUI m_commonItemUI;
@@ -31,7 +49,7 @@ namespace Project.UI
             {
                 RectTransform.SetParent(slotUI.transform.parent, true);
                 RectTransform.position = slotUI.transform.position;
-                RectTransform.sizeDelta = ItemTileSlotUI.GetItemSize(m_item.ItemRecord);
+                RectTransform.sizeDelta = InventoryItemUI.GetItemSize(m_item.ItemRecord);
             }
             else //equipSlot
             {
@@ -47,6 +65,10 @@ namespace Project.UI
             {
                 UIManager.AsynCreateItemOptionMenuUI(m_item, Input.mousePosition);
             }
+            else if(Input.GetMouseButtonUp(0))
+            {
+                //todo use item
+            }
         }
 
         public void Refresh()
@@ -54,9 +76,27 @@ namespace Project.UI
             m_commonItemUI.Init(m_item.ItemRecord.ID, m_item.Amount);
         }
 
+        public void OnEnterDragObject(HandleDrag handle)
+        {
+            Item item = Item as Item;
+            if(item.CanMerge(handle.ItemID,handle.Amount))
+            {
+                m_commonItemUI.SetBackgroundColor(new Color(0f, 1f, 0f, m_commonItemUI.OriginBackgroundAlpha));
+            }
+            else
+            {
+                m_commonItemUI.SetBackgroundColor(new Color(1f, 0f, 0f, m_commonItemUI.OriginBackgroundAlpha));
+            }
+        }
+
+        public void OnExitDragObject(HandleDrag handle)
+        {
+            m_commonItemUI.SetBackgroundColor(m_commonItemUI.OriginColor);
+        }
+
         public void OnBeginDrag(PointerEventData eventData)
         {
-            Game.UIManager.DragAndDropSystem.StartDrag(this);
+            Game.UIManager.GetUI<DragAndDropSystem>(UIKey.DragAndDropSystem).RequestDrag(this);
         }
     }
 }

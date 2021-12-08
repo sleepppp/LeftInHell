@@ -164,3 +164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b8d78d2b2cb7704cbb9916c165ea74d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  SafeAreaActionTypeEnum: 0
+  ConformX: 1
+  ConformY: 1
+  SafeAreaTransform: {fileID: 0}

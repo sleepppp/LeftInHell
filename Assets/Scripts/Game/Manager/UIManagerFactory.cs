@@ -23,5 +23,14 @@ namespace Project.UI
                 ui.Init(item,position);
             });
         }
+
+        public static void AsyncDragAndDropSystem()
+        {
+            string path = "Assets/Resource/Prefab/UI/DragAndDropSystem.prefab";
+            Game.UIManager.CreateUI<DragAndDropSystem>(path, UIKey.DragAndDropSystem, (ui) => 
+            {
+                ui.Init();
+            });
+        }
     }
 }

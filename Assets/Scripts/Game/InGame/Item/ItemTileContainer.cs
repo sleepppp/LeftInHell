@@ -92,10 +92,10 @@ namespace Project
             }
 
             //can merge
-            if(startSlot.Item != null && startSlot.Item.ItemRecord.ID == itemID)
+            if(startSlot.Item != null)
             {
-               if(startSlot.Item.ItemTypeRecord.IsStackable &&  
-                    startSlot.Item.ItemRecord.MaxStackAmount - startSlot.Item.Amount >= amount)
+                Item item = GetItem(startSlot.Item.Puid);
+                if(item != null && item.CanMerge(itemID,amount))
                 {
                     return true;
                 }
@@ -216,19 +216,15 @@ namespace Project
             ItemTileSlot slot = m_slotContainer.GetValue(slotPUID);
             if(slot.Item != null)
             {
-                if(slot.Item.ItemRecord.ID == itemID &&
-                    slot.Item.ItemRecord.MaxStackAmount - slot.Item.Amount >= amount)
-                {
-                    Item item = GetItem(slot.Item.Puid);
-                    item.AddAmount(amount);
-                }
+                Item item = GetItem(slot.Item.Puid);
+                item.TryMerge(itemID, amount);
             }
             else
             {
                 ItemRecord itemRecord = DataTableManager.ItemTable.GetRecord(itemID);
                 if(IsEmptyArea(slot.IndexX,slot.IndexY,itemRecord.Width,itemRecord.Height))
                 {
-                    Item item = new Item(itemID, amount);
+                    Item item = Item.CreateItem(itemID, amount);
                     item.BindToSlot(slot);
                     Foreach(slot.IndexX, slot.IndexY, itemRecord.Width, itemRecord.Height, (slot) => 
                     {

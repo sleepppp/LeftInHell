@@ -17,6 +17,8 @@ namespace Project
         bool AddAmount(int amount);
         bool RemoveAmount(int amount);
         bool BindToSlot(IItemSlot slot);
+        bool CanMerge(int itemID, int amount);
+        bool TryMerge(int itemID, int amount);
     }
 
 }
