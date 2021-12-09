@@ -15,7 +15,7 @@ namespace Project.UI
 
         Color m_originColor;
 
-        public float OriginBackgroundAlpha { get { return 0.3f; } }
+        public float OriginBackgroundAlpha { get { return 0.7f; } }
         public Color OriginColor { get { return m_originColor; } }
 
         public void Init(int itemID, int amount)

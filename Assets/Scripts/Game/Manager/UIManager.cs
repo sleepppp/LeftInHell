@@ -11,6 +11,7 @@ namespace Project.UI
         InventoryUI = 1,
         ItemOptionMenuUI,
         DragAndDropSystem,
+        PopupContainerUI
     }
 
     public partial class UIManager
@@ -55,11 +56,16 @@ namespace Project.UI
             return result as T;
         }
 
-        public T Raycast<T>(Vector2 screenPoint) where T :UIBase
+        public T Raycast<T>(Vector2 screenPoint, bool onlyFirstTarget = false) where T :UIBase
         {
             T output = null;
 
             List<RaycastResult> resultList = RaycastGetList(screenPoint);
+
+            if(onlyFirstTarget && resultList.Count != 0)
+            {
+                return resultList[0].gameObject.GetComponent<T>();
+            }
 
             foreach (var result in resultList)
             {
@@ -75,7 +81,7 @@ namespace Project.UI
 
         public List<RaycastResult> RaycastGetList(Vector2 screenPoint)
         {
-            //todo GC Optimaze
+            //todo GC Optimized
             PointerEventData eventData = new PointerEventData(EventSystem);
             eventData.position = screenPoint;
             List<RaycastResult> resultList = new List<RaycastResult>();

@@ -7,17 +7,28 @@ namespace Project.UI
     public class InventoryUI : ManagedUIBase, IRefresh
     {
         [SerializeField] ItemTileContainerUI m_bagUI;
-        [SerializeField] ItemTileContainerUI m_testBagUI;
         public void Init()
         {
             m_bagUI.Init(Game.World.Player.Inventory.BagContainer);
-            m_testBagUI.Init(Game.World.Player.Inventory.TestContainer);
         }
 
         public void Refresh()
         {
             m_bagUI.Refresh();
-            m_testBagUI.Refresh();
+        }
+
+        public override void Close()
+        {
+            base.Close();
+
+            if (Game.UIManager.GetUI<PopupContainerUI>(UIKey.PopupContainerUI) )
+                Game.UIManager.RemoveUI(UIKey.PopupContainerUI);
+        }
+
+        public void OpenTestContainerUI()
+        {
+            if(Game.UIManager.GetUI<PopupContainerUI>(UIKey.PopupContainerUI) == false)
+                UIManager.AsyncCreatePopupContainerUI(Game.World.Player.Inventory.TestContainer);
         }
     }
 }

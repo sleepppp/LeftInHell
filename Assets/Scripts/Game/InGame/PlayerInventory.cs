@@ -24,7 +24,7 @@ namespace Project
                 m_itemTileContainer.AddItem(1, 100);
                 m_itemTileContainer.AddItem(5, 100);
             }
-            m_testContainer = new ItemTileContainer(config.StartBagWidth, config.StartBagHeight);
+            m_testContainer = new ItemTileContainer(6,15);
             {
                 m_testContainer.AddItem(1, 33);
             }

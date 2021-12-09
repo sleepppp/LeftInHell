@@ -8,10 +8,13 @@ namespace Project.UI
 {
     public class ItemTileContainerUI : UIBase, IItemContainerUI
     {
+        const float c_scrollBarWidth = 20f;
+
         [Header("ItemTileContainerUI")]
         [SerializeField] GameObject m_slotPrefab;
         [SerializeField] ScrollRect m_scrollRect;
         [SerializeField] GridLayoutGroup m_gridLayoutGroup;
+        [SerializeField] int m_maxViewVerticalCount = 8;
 
         ItemTileContainer m_itemTileContainer;
 
@@ -20,7 +23,7 @@ namespace Project.UI
 
         public IItemContainer ItemContainer => m_itemTileContainer;
 
-        void Start()
+        void Awake()
         {
             Game.UIManager.GetUI<DragAndDropSystem>(UIKey.DragAndDropSystem).RegisterContainerUI(this);
         }
@@ -32,6 +35,11 @@ namespace Project.UI
 
         public void Init(ItemTileContainer itemContainer)
         {
+            float width = itemContainer.Width * 50f + c_scrollBarWidth;
+            int heightCount = itemContainer.Height < m_maxViewVerticalCount ? itemContainer.Height : m_maxViewVerticalCount;
+            float height = heightCount * 50f;
+            RectTransform.sizeDelta = new Vector2(width, height);
+
             m_itemTileContainer = itemContainer;
             List<IItemSlot> slotList = m_itemTileContainer.Slots;
             foreach(var slot in slotList)

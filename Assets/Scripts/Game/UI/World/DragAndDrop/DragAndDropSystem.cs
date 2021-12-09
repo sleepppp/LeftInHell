@@ -20,13 +20,14 @@ namespace Project.UI
         HandleDrag m_handleDrag;
         List<IItemContainerUI> m_containerUIList = new List<IItemContainerUI>();
 
+        UpdateManager.Handler m_updateHandle = UpdateManager.Handler.Null;
+
         public bool IsDragState => GetHandle() != null;
 
         public void Init()
         {
             m_itemUI = GetComponentInChildren<CommonItemUI>();
             gameObject.SetActive(false);
-            UpdateManager.Register(ForceUpdateLastSibling());
         }
 
         void Update()
@@ -38,7 +39,7 @@ namespace Project.UI
             if(Input.GetMouseButtonUp(0))
             {
                 handle.LastEnterItemUI?.OnExitDragObject(handle);
-                InventoryItemUI inventoryItemUI = Game.UIManager.Raycast<InventoryItemUI>(RectTransform.position);
+                InventoryItemUI inventoryItemUI = Game.UIManager.Raycast<InventoryItemUI>(RectTransform.position,true);
                 if (inventoryItemUI)
                 {
                     Item item = inventoryItemUI.Item as Item;
@@ -54,7 +55,7 @@ namespace Project.UI
                 }
                 else
                 {
-                    ItemSlotBaseUI slotUI = Game.UIManager.Raycast<ItemSlotBaseUI>(RectTransform.position);
+                    ItemSlotBaseUI slotUI = Game.UIManager.Raycast<ItemSlotBaseUI>(RectTransform.position, true);
                     if(slotUI != null && slotUI.Slot.Owner.CanEquipItem(slotUI.Slot.Puid,handle.ItemID,handle.Amount))
                     {
                         slotUI.Slot.Owner.EquipItem(slotUI.Slot.Puid, handle.ItemID, handle.Amount);
@@ -74,7 +75,7 @@ namespace Project.UI
 
                 bool isPossibleDrop = false;
 
-                InventoryItemUI inventoryItemUI = Game.UIManager.Raycast<InventoryItemUI>(RectTransform.position);
+                InventoryItemUI inventoryItemUI = Game.UIManager.Raycast<InventoryItemUI>(RectTransform.position, true);
                 if(inventoryItemUI)
                 {
                     handle.LastEnterItemUI = inventoryItemUI;
@@ -85,7 +86,7 @@ namespace Project.UI
                 }
                 else
                 {
-                    ItemSlotBaseUI slotUI = Game.UIManager.Raycast<ItemSlotBaseUI>(RectTransform.position);
+                    ItemSlotBaseUI slotUI = Game.UIManager.Raycast<ItemSlotBaseUI>(RectTransform.position, true);
                     if(slotUI != null)
                     {
                         isPossibleDrop = slotUI.Slot.Owner.CanEquipItem(slotUI.Slot.Puid, handle.ItemID, handle.Amount);
@@ -151,6 +152,16 @@ namespace Project.UI
                 container.Refresh();
         }
 
+        public override void Close()
+        {
+            base.Close();
+
+            if(m_updateHandle.Equals(UpdateManager.Handler.Null) == false)
+            {
+                UpdateManager.UnRegister(m_updateHandle);
+            }
+        }
+
         HandleDrag GetHandle()
         {
             return m_handleDrag;
@@ -165,18 +176,23 @@ namespace Project.UI
                 SucceededNoti = succeededNoti,
                 FailedNoti = failedNoti
             };
+            m_updateHandle = UpdateManager.Register(ForceUpdateLastSibling());
+
             return GetHandle();
+        }
+
+        void RemoveHandle()
+        {
+            UpdateManager.UnRegister(m_updateHandle);
+
+            m_handleDrag = null;
+            m_updateHandle = UpdateManager.Handler.Null;
         }
 
         void UpdatePosition()
         {
             RectTransform.position = Input.mousePosition - ((Vector3)new Vector2(RectTransform.sizeDelta.x, -RectTransform.sizeDelta.y) * 0.5f);
             RectTransform.ReviseTransformInRect(Game.UIManager.SafeArea);
-        }
-
-        void RemoveHandle()
-        {
-            m_handleDrag = null;
         }
 
         void OnFinishedDrag()
@@ -193,16 +209,17 @@ namespace Project.UI
 
             while(true)
             {
-                while(currentTime < checkTime)
-                {
-                    currentTime += Time.unscaledDeltaTime;
-                    yield return null;
-                }
                 currentTime = 0f;
                 var count = transform.GetSiblingIndex() + 1;
                 if (count != transform.parent.childCount)
                 {
                     transform.SetAsLastSibling();
+                }
+
+                while (currentTime < checkTime)
+                {
+                    currentTime += Time.unscaledDeltaTime;
+                    yield return null;
                 }
             }
         }

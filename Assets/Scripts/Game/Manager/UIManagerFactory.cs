@@ -32,5 +32,14 @@ namespace Project.UI
                 ui.Init();
             });
         }
+
+        public static void AsyncCreatePopupContainerUI(ItemTileContainer itemContainer)
+        {
+            string path = "Assets/Resource/Prefab/UI/PopupContainerUI.prefab";
+            Game.UIManager.CreateUI<PopupContainerUI>(path, UIKey.PopupContainerUI, (ui) =>
+            {
+                ui.Init(itemContainer);
+            });
+        }
     }
 }
