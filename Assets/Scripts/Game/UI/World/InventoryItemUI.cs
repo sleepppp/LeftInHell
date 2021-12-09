@@ -6,10 +6,15 @@ namespace Project.UI
     using GameData;
     public class InventoryItemUI : UIBase, IRefresh ,IBeginDragHandler
     {
+        static string s_path = "Assets/Resource/Prefab/UI/InventoryItem.prefab";
         public static void CreateUI(Action<InventoryItemUI> callback)
         {
-            string path = "Assets/Resource/Prefab/UI/InventoryItem.prefab";
-            AssetManager.Instantiate<InventoryItemUI>(path, callback);
+            AssetManager.Instantiate<InventoryItemUI>(s_path, callback);
+        }
+
+        public static void GetPrefab(Action<GameObject> callback)
+        {
+            AssetManager.LoadAssetAsync<GameObject>(s_path, callback);
         }
 
         public static Vector2 GetItemSize(ItemRecord itemRecord)

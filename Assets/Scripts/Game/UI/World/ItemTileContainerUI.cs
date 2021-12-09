@@ -19,7 +19,7 @@ namespace Project.UI
         ItemTileContainer m_itemTileContainer;
 
         readonly Dictionary<Puid, ItemTileSlotUI> m_slotUIContainer = new Dictionary<Puid, ItemTileSlotUI>();
-        readonly List<InventoryItemUI> m_itemContainer = new List<InventoryItemUI>();
+        GameObjectPool<InventoryItemUI> m_itemPool;
 
         public IItemContainer ItemContainer => m_itemTileContainer;
 
@@ -55,42 +55,27 @@ namespace Project.UI
             m_gridLayoutGroup.SetLayoutVertical();
             Canvas.ForceUpdateCanvases();
 
-            Refresh();
+            InventoryItemUI.GetPrefab((prefab) => 
+            {
+                m_itemPool = new GameObjectPool<InventoryItemUI>(prefab, null, itemContainer.Items.Count);
+                Refresh();
+            });
         }
 
         public void Refresh()
         {
-            foreach (var item in m_itemContainer)
+            foreach(var item in m_itemPool)
+            {
                 item.gameObject.SetActive(false);
+            }
 
             List<IItem> itemList = m_itemTileContainer.Items;
             foreach(var item in itemList)
             {
-                InstantiateItemUI((ui) => 
-                {
-                    ui.Init(item);
-                    ui.BindToSlot(GetSlotUI(item.OwnerSlot.Puid));
-                });
+                InventoryItemUI ui = m_itemPool.Pop();
+                ui.Init(item);
+                ui.BindToSlot(GetSlotUI(item.OwnerSlot.Puid));
             }
-        }
-
-        void InstantiateItemUI(Action<InventoryItemUI> callback)
-        {
-            foreach(var item in m_itemContainer)
-            {
-                if(item.gameObject.activeSelf == false)
-                {
-                    item.gameObject.SetActive(true);
-                    callback?.Invoke(item);
-                    return;
-                }
-            }
-
-            InventoryItemUI.CreateUI((ui)=> 
-            {
-                m_itemContainer.Add(ui);
-                callback?.Invoke(ui);
-            });
         }
 
         ItemTileSlotUI GetSlotUI(Puid slotPuid)
