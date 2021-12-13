@@ -6,7 +6,6 @@ using UnityEngine.EventSystems;
 
 namespace Project.UI
 {
-
     public class MouseHoverChecker : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         public Color ChangeColor;

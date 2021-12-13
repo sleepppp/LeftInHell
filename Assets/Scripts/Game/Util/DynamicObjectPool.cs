@@ -1,161 +1,89 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+
 namespace Project
 {
-    public interface IObjectPool<T> : ICollection<T>
+    interface IObjectPool<T>
     {
-        T Pop();
-        void Return(T t);
-        void Create(int count);
-        T Create();
-        bool CanPop(T t);
+        T Get();
+        T Instantiate();
     }
 
-    public interface IGameObjectPool<T> : IObjectPool<T>
+    public class GameObjectPool<T> : IObjectPool<T> where T : Component
     {
-        void SetPrefab(GameObject gameObject);
-        void SetParent(Transform transform);
-    }
+        List<T> _objectList = new List<T>();
+        public GameObject Prefab;
+        public Transform Parent;
+        public bool IsSleepAfterInstantiate;
+        public bool IsAutoActive;
 
-    public class GameObjectPool<T> : IGameObjectPool<T> where T : Component
-    {
-        readonly List<T> m_objectList;
-        GameObject m_prefab;
-        Transform m_parentTransform;
-        bool m_isCreateAndSleep;
-        bool m_isAutoAwake;
-
-        public int Count => m_objectList.Count;
-        public bool IsReadOnly => false;
-        public bool isCreateAndSleep { get { return m_isCreateAndSleep; } set { m_isCreateAndSleep = value; } }
-        public bool IsAutoAwake { get { return m_isAutoAwake; } set { m_isAutoAwake = value; } }
-
-        public GameObjectPool(GameObject prefab)
+        public GameObjectPool(GameObject prefab, Transform parent = null, int count = 0, bool isSleepAfterInstantiate = true, bool isAutoActive = true)
         {
-            SetPrefab(prefab);
-            m_objectList = new List<T>();
-        }
+            Prefab = prefab;
+            Parent = parent;
+            IsSleepAfterInstantiate = isSleepAfterInstantiate;
+            IsAutoActive = isAutoActive;
 
-        public GameObjectPool(GameObject prefab, Transform parent, int count, bool isCreateAndSleep = true,bool isAutoAwake = true)
-            :this(prefab)
-        {
-            SetParent(parent);
-            m_isCreateAndSleep = isCreateAndSleep;
-            m_isAutoAwake = isAutoAwake;
-
-            Create(count);
-        }
-
-        public void Add(T item)
-        {
-            m_objectList.Add(item);
-        }
-
-        public bool CanPop(T t)
-        {
-            return t.gameObject.activeSelf == false;
-        }
-
-        public void Clear()
-        {
-            m_objectList.Clear();
-        }
-
-        public bool Contains(T item)
-        {
-            return m_objectList.Contains(item);
-        }
-
-        public void CopyTo(T[] array, int arrayIndex)
-        {
-            m_objectList.CopyTo(array, arrayIndex);
-        }
-
-        public void Create(int count)
-        {
             for (int i = 0; i < count; ++i)
             {
-                Create();
+                Instantiate();
             }
         }
 
-        public T Create()
+        public T Get()
         {
-            GameObject newObject = null;
-            if (m_parentTransform == null)
-                newObject = GameObject.Instantiate(m_prefab);
-            else
-                newObject = GameObject.Instantiate(m_prefab, m_parentTransform);
-
-            if (isCreateAndSleep)
-                newObject.SetActive(false);
-
-            T result = newObject.GetComponent<T>();
-
-            Add(result);
-
-            return result;
-        }
-
-        public IEnumerator<T> GetEnumerator()
-        {
-            return m_objectList.GetEnumerator();
-        }
-
-        public T Pop()
-        {
-            foreach(var item in m_objectList)
+            foreach (var item in _objectList)
             {
-                if(item.gameObject.activeSelf == false)
+                if (item.gameObject.activeSelf == false)
                 {
-                    if(m_isAutoAwake)
+                    if (IsAutoActive)
                         item.gameObject.SetActive(true);
+
                     return item;
                 }
             }
 
-            T newComponent = Create();
-            if (m_isAutoAwake)
-                newComponent.gameObject.SetActive(true);
-            return newComponent;
+            T result = Instantiate();
+            if (IsAutoActive)
+                result.gameObject.SetActive(true);
+            return result;
         }
 
-        public bool Remove(T item)
+        public T Instantiate()
         {
-            return m_objectList.Remove(item);
-        }
+            GameObject newObject = null;
+            if (Parent)
+                newObject = GameObject.Instantiate(Prefab, Parent);
+            else
+                newObject = GameObject.Instantiate(Prefab);
 
-        public void SetParent(Transform transform)
-        {
-            if(m_parentTransform != transform)
+            T result = newObject.GetComponent<T>();
+            if (result == null)
             {
-                foreach(var item in m_objectList)
-                {
-                    item.transform.SetParent(transform);
-                }
+                throw new System.Exception("No Component : " + typeof(T).Name);
             }
+            _objectList.Add(result);
 
-            m_parentTransform = transform;
+            if (IsSleepAfterInstantiate)
+                result.gameObject.SetActive(false);
+
+            return result;
         }
 
-        public void SetPrefab(GameObject gameObject)
+        public void Foreach(Action<T> query)
         {
-            m_prefab = gameObject;
+            foreach (var item in _objectList)
+            {
+                query.Invoke(item);
+            }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public void SleepAll()
         {
-            return m_objectList.GetEnumerator();
+            Foreach((item) => { item.gameObject.SetActive(false); });
         }
 
-        public void Return(T t)
-        {
-            if (Contains(t) == false)
-                return;
-
-            t.gameObject.SetActive(false);
-        }
     }
 }

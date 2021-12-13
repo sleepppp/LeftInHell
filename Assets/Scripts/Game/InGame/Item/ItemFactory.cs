@@ -6,7 +6,13 @@ namespace Project
         //todo reflected
         public static Item CreateItem(int itemID, int amount)
         {
-            return new Item(itemID, amount);
+            switch(itemID)
+            {
+                case 2:
+                    return new ItemBox(itemID);
+                default:
+                    return new Item(itemID, amount);
+            }
         }
     }
 }

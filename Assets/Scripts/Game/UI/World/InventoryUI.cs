@@ -24,11 +24,5 @@ namespace Project.UI
             if (Game.UIManager.GetUI<PopupContainerUI>(UIKey.PopupContainerUI) )
                 Game.UIManager.RemoveUI(UIKey.PopupContainerUI);
         }
-
-        public void OpenTestContainerUI()
-        {
-            if(Game.UIManager.GetUI<PopupContainerUI>(UIKey.PopupContainerUI) == false)
-                UIManager.AsyncCreatePopupContainerUI(Game.World.Player.Inventory.TestContainer);
-        }
     }
 }

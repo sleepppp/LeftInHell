@@ -8,4 +8,10 @@ namespace Project
         ItemBox = 2,
         Bag = 3,
     }
+
+    public enum ItemMatchType : int
+    {
+        ContainerWidth = 3,
+        ContainerHeight = 4,
+    }
 }

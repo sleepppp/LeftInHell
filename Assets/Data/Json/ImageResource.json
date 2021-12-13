@@ -14,6 +14,11 @@
       "ID": "3",
       "Path": "Assets/Resource/Sprite/UI/Item/Cloth.png",
       "DEV": "천"
+    },
+    {
+      "ID": "4",
+      "Path": "Assets/Resource/Sprite/UI/Item/TestItemCase.png",
+      "DEV": "아이템케이스"
     }
   ]
 }

@@ -15,13 +15,13 @@
     {
       "ID": "2",
       "DEV": "테스트아이템박스",
-      "DescID": "4",
+      "DescID": "3",
       "Type": "2",
       "MaxStackAmount": "1",
       "Width": "5",
-      "Height": "3",
+      "Height": "2",
       "ModelID": "0",
-      "ImageID": "2",
+      "ImageID": "4",
       "Weight": "1"
     },
     {

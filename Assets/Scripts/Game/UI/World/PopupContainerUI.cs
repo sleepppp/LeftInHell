@@ -8,7 +8,7 @@ namespace Project.UI
     {
         [SerializeField] ItemTileContainerUI m_containerUI;
 
-        public void Init(ItemTileContainer itemContainer)
+        public void Init(ItemTileContainer itemContainer,Vector3 startPosition)
         {
             m_containerUI.Init(itemContainer);
         }

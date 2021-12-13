@@ -64,15 +64,12 @@ namespace Project.UI
 
         public void Refresh()
         {
-            foreach(var item in m_itemPool)
-            {
-                item.gameObject.SetActive(false);
-            }
+            m_itemPool.SleepAll();
 
             List<IItem> itemList = m_itemTileContainer.Items;
             foreach(var item in itemList)
             {
-                InventoryItemUI ui = m_itemPool.Pop();
+                InventoryItemUI ui = m_itemPool.Get();
                 ui.Init(item);
                 ui.BindToSlot(GetSlotUI(item.OwnerSlot.Puid));
             }

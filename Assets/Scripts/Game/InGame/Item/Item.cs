@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Project
 {
-    public partial class Item : PObject,  IItem, IItemHandle ,IClone<Item>
+    public partial class Item : PObject,  IItem ,IClone<Item>
     {
         readonly ItemRecord m_itemRecord;
         readonly ItemTypeRecord m_itemTypeRecord;
@@ -35,6 +35,7 @@ namespace Project
             m_itemRecord = clone.ItemRecord;
             m_itemTypeRecord = clone.ItemTypeRecord;
             m_amount = clone.Amount;
+            m_ownerSlot = clone.OwnerSlot;
         }
 
         public bool AddAmount(int amount)
@@ -92,6 +93,21 @@ namespace Project
                 return false;
 
             return AddAmount(amount);
+        }
+
+        public virtual bool CanUse()
+        {
+            return false;
+        }
+
+        public virtual bool TryUse()
+        {
+            return false;
+        }
+
+        public bool CanBindToSlot(IItemSlot slot)
+        {
+            return true;
         }
     }
 }

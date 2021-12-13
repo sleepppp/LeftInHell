@@ -2,15 +2,17 @@
   "List": [
     {
       "ID": "1",
-      "ItemID": "3",
+      "DEVNAME": "컨테이너가로길이",
+      "ItemID": "2",
       "MatchType": "3",
-      "Value": "10"
+      "Value": "5"
     },
     {
       "ID": "2",
-      "ItemID": "3",
+      "DEVNAME": "컨테이너세로길이",
+      "ItemID": "2",
       "MatchType": "4",
-      "Value": "30"
+      "Value": "13"
     }
   ]
 }

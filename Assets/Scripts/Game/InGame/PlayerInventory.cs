@@ -9,10 +9,8 @@ namespace Project
     public class PlayerInventory : PObject, IItemContainer
     {
         readonly ItemTileContainer m_itemTileContainer;
-        readonly ItemTileContainer m_testContainer;
 
         public ItemTileContainer BagContainer { get { return m_itemTileContainer; } }
-        public ItemTileContainer TestContainer { get { return m_testContainer; } }
         public List<IItemSlot> Slots => m_itemTileContainer.Slots;
         public List<IItem> Items => m_itemTileContainer.Items;
 
@@ -23,10 +21,7 @@ namespace Project
             {
                 m_itemTileContainer.AddItem(1, 100);
                 m_itemTileContainer.AddItem(5, 100);
-            }
-            m_testContainer = new ItemTileContainer(6,15);
-            {
-                m_testContainer.AddItem(1, 33);
+                m_itemTileContainer.AddItem(2, 1);
             }
 
         }
@@ -64,6 +59,17 @@ namespace Project
         public ItemSlotBase GetSlot(Puid puid)
         {
             return m_itemTileContainer.GetSlot(puid);
+        }
+
+        public void UseItem(Puid itemPuid)
+        {
+            Item item = m_itemTileContainer.GetItem(itemPuid);
+            if(item == null || item.CanUse() == false)
+            {
+                return;
+            }
+
+            item.TryUse();
         }
     }
 }

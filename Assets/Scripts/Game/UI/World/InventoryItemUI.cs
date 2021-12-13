@@ -72,7 +72,7 @@ namespace Project.UI
             }
             else if(Input.GetMouseButtonUp(0))
             {
-                //todo use item
+                Game.World.Player.Inventory.UseItem(m_item.Puid);
             }
         }
 
